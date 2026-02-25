@@ -1,0 +1,16 @@
+# Solana Backend
+
+This project demonstrates a basic Solana backend system using Rust.
+
+## Setup
+
+1. Install Rust and Solana CLI.
+2. Run `cargo build-bpf` to build the program.
+3. Deploy the program to the Solana blockchain.
+
+## Usage
+
+1. Call the program to increment the counter.
+2. Verify the counter value.
+
+Note: This is a simplified example and should not be used in production without proper testing and security audits.
