@@ -1,0 +1,70 @@
+// src/main.rs
+use solana_program::program::invoke;
+use solana_program::program::invoke_signed;
+use solana_program::system_instruction;
+use solana_program::account_info::AccountInfo;
+use solana_program::entrypoint::ProgramResult;
+use solana_program::program_error::PrintProgramError;
+use solana_program::pubkey::Pubkey;
+use std::str::FromStr;
+
+fn main() -> ProgramResult {
+    let program_id = Pubkey::from_str("YourProgramIdHere").unwrap();
+    let counter_account = Pubkey::from_str("YourCounterAccountIdHere").unwrap();
+
+    // Create a new account for the counter if it doesn't exist
+    let create_account_ix = system_instruction::create_account(
+        &Pubkey::from_str("YourFundingAccountHere").unwrap(),
+        &counter_account,
+        1000000, // lamports
+        1024, // space
+        &program_id,
+    );
+
+    invoke(&create_account_ix, &[
+        AccountInfo::new(
+            &Pubkey::from_str("YourFundingAccountHere").unwrap(),
+            true,
+            true,
+        ),
+        AccountInfo::new(
+            &counter_account,
+            false,
+            true,
+        ),
+        AccountInfo::new(
+            &Pubkey::from_str("YourSystemProgramIdHere").unwrap(),
+            false,
+            false,
+        ),
+    ])?;
+
+    // Call the program to increment the counter
+    let instruction_data = vec![];
+    invoke(
+        &system_instruction::invoke(
+            &program_id,
+            &counter_account,
+            &instruction_data,
+        ),
+        &[
+            AccountInfo::new(
+                &Pubkey::from_str("YourFundingAccountHere").unwrap(),
+                true,
+                true,
+            ),
+            AccountInfo::new(
+                &counter_account,
+                false,
+                true,
+            ),
+            AccountInfo::new(
+                &Pubkey::from_str("YourSystemProgramIdHere").unwrap(),
+                false,
+                false,
+            ),
+        ],
+    )?;
+
+    Ok(())
+}
